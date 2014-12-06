@@ -1,0 +1,33 @@
+{
+  "name": "silverfish",
+  "version": "0.0.1",
+  "description": "object cache server",
+  "main": "silverfish.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/roylines/silverfish.git"
+  },
+  "keywords": [
+    "object",
+    "cache",
+    "memcache",
+    "memcached",
+    "level"
+  ],
+  "author": "Roy Lines",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/roylines/silverfish/issues"
+  },
+  "homepage": "https://github.com/roylines/silverfish",
+  "dependencies": {
+    "restify": "^2.8.3"
+  },
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.0.1"
+  }
+}
