@@ -24,10 +24,12 @@
   },
   "homepage": "https://github.com/roylines/silverfish",
   "dependencies": {
+    "cacheman": "^1.0.3",
     "restify": "^2.8.3"
   },
   "devDependencies": {
     "chai": "^1.10.0",
-    "mocha": "^2.0.1"
+    "mocha": "^2.0.1",
+    "request": "^2.49.0"
   }
 }
