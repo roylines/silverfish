@@ -5,6 +5,10 @@ var expect = require('chai').expect,
 var port = process.env.TESTPORT || 8081;
 
 describe('listening on ' + port, function() {
+  var testData = {
+    field: 'value'
+  };
+
   before(function(done) {
     return silverfish.listen(port, done);
   });
@@ -31,22 +35,19 @@ describe('listening on ' + port, function() {
     return request
       .put({
         url: url('/object/silverfish'),
-        json: {
-          field: 'value'
-        }
+        json: testData,
       }, function(e, r, b) {
         expect(r.statusCode).to.equal(200);
         return done();
       });
   });
 
-  it.skip('should return 200 for getting a valid object', function(done) {
+  it('should return a valid object', function(done) {
     return request
-      .get(url('/object/silverfish'))
-      .on('response', function(r) {
+      .get(url('/object/silverfish'), function(e, r) {
         expect(r.statusCode).to.equal(200);
+        expect(r.body).to.deep.equal(JSON.stringify(testData));
         return done();
       });
-    return done();
   });
 });
