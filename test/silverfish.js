@@ -1,5 +1,5 @@
 var expect = require('chai').expect,
-  request = require('request'),
+  Memcached = require('memcached'),
   silverfish = require('../silverfish');
 
 var port = process.env.TESTPORT || 8081;
@@ -10,6 +10,7 @@ describe('listening on ' + port, function() {
   };
 
   before(function(done) {
+    memcached = new Memcached('127.0.0.1:' + port);
     return silverfish.listen(port, done);
   });
 
@@ -18,36 +19,32 @@ describe('listening on ' + port, function() {
     return done();
   });
 
-  function url(path) {
-    return 'http://localhost:' + port + path;
-  }
-
-  it('should return 404 for getting a missing object', function(done) {
-    return request
-      .get(url('/object/missing'))
-      .on('response', function(r) {
-        expect(r.statusCode).to.equal(404);
-        return done();
-      });
+  it('can set a value', function(done) {
+    return memcached.set('foo', 'bar', 10, function(e) {
+      expect(e).to.equal(undefined);
+      return done();
+    });
   });
 
-  it('should return 200 for putting an object', function(done) {
-    return request
-      .put({
-        url: url('/object/silverfish'),
-        json: testData,
-      }, function(e, r, b) {
-        expect(r.statusCode).to.equal(200);
-        return done();
-      });
+  it('can set a large value', function(done) {
+    var large = '1234567890',
+      count = 10;
+    for (var i = 0; i < count; i++) {
+      large += large + large;
+    }
+
+    return memcached.set('large', large, 10, function(e) {
+      expect(e).to.equal(undefined);
+      return done();
+    });
   });
 
-  it('should return a valid object', function(done) {
-    return request
-      .get(url('/object/silverfish'), function(e, r) {
-        expect(r.statusCode).to.equal(200);
-        expect(r.body).to.deep.equal(JSON.stringify(testData));
-        return done();
-      });
+  it.skip('can get a set value', function(done) {
+    return memcached.get('foo', function(e, d) {
+      expect(e).to.equal(undefined);
+      expect(d).to.equal('bar');
+      return done();
+    });
   });
+
 });
