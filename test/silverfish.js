@@ -9,7 +9,15 @@ describe('listening on ' + port, function() {
     field: 'value'
   };
 
+  var large;
+
   before(function(done) {
+    large = '1234567890',
+      count = 8;
+    for (var i = 0; i < count; i++) {
+      large += large + large;
+    }
+
     memcached = new Memcached('127.0.0.1:' + port);
     return silverfish.listen(port, done);
   });
@@ -27,11 +35,6 @@ describe('listening on ' + port, function() {
   });
 
   it('can set a large value', function(done) {
-    var large = '1234567890',
-      count = 10;
-    for (var i = 0; i < count; i++) {
-      large += large + large;
-    }
 
     return memcached.set('large', large, 10, function(e) {
       expect(e).to.equal(undefined);
@@ -39,10 +42,18 @@ describe('listening on ' + port, function() {
     });
   });
 
-  it.skip('can get a set value', function(done) {
+  it('can get a value', function(done) {
     return memcached.get('foo', function(e, d) {
       expect(e).to.equal(undefined);
       expect(d).to.equal('bar');
+      return done();
+    });
+  });
+  
+  it('can get a large value', function(done) {
+    return memcached.get('large', function(e, d) {
+      expect(e).to.equal(undefined);
+      expect(d).to.equal(large);
       return done();
     });
   });
